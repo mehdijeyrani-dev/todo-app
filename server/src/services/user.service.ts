@@ -5,8 +5,15 @@ export const UserService = {
     return await User.find();
   },
 
-  async createUser(data: { name: string; email: string }): Promise<IUser> {
-    const user = new User(data);
-    return await user.save();
+  async getUserById(id: string): Promise<IUser | null> {
+    return await User.findById(id);
+  },
+
+  async updateUser(id: string, data: Partial<IUser>): Promise<IUser | null> {
+    return await User.findByIdAndUpdate(id, data, { new: true });
+  },
+
+  async deleteUser(id: string): Promise<void> {
+    await User.findByIdAndDelete(id);
   },
 };

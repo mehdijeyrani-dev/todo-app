@@ -7,17 +7,36 @@ export const UserController = {
     try {
       const users = await UserService.getAllUsers();
       res.json(users);
-    } catch (error) {
-      next(new AppError("Failed to get users", 500, error));
+    } catch (error: any) {
+      next(new AppError(error.message, 500));
     }
   },
 
-  async createUser(req: Request, res: Response, next: NextFunction) {
+  async getProfile(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await UserService.createUser(req.body);
-      res.status(201).json(user);
-    } catch (error) {
-      next(new AppError("Failed to create user", 500, error));
+      const user = await UserService.getUserById(req.userId!);
+      if (!user) return next(new AppError("User not found", 404));
+      res.json(user);
+    } catch (error: any) {
+      next(new AppError(error.message, 500));
+    }
+  },
+
+  async updateProfile(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = await UserService.updateUser(req.userId!, req.body);
+      res.json(user);
+    } catch (error: any) {
+      next(new AppError(error.message, 500));
+    }
+  },
+
+  async deleteProfile(req: Request, res: Response, next: NextFunction) {
+    try {
+      await UserService.deleteUser(req.userId!);
+      res.json({ message: "User deleted successfully" });
+    } catch (error: any) {
+      next(new AppError(error.message, 500));
     }
   },
 };
