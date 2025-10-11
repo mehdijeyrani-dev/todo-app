@@ -14,7 +14,19 @@ export const TaskController = {
 
   async getTasks(req: Request, res: Response, next: NextFunction) {
     try {
-      const tasks = await TaskService.getTasksByUser(req.userId!);
+      const filter = {
+        status: req.query.status as string,
+        priority: req.query.priority as string,
+        category: req.query.category as string,
+        tags: req.query.tags
+          ? (req.query.tags as string).split(",")
+          : undefined,
+        archived: req.query.archived
+          ? req.query.archived === "true"
+          : undefined,
+      };
+
+      const tasks = await TaskService.getTasksByUser(req.userId!, filter);
       res.json(tasks);
     } catch (error: any) {
       next(new AppError(error.message, 500));
