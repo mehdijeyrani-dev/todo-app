@@ -4,6 +4,7 @@ import { connectDB } from "./config/db";
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
 import taskRoutes from "./routes/task.routes";
+import dashboardRoutes from "./routes/dashboard.routes";
 import { logger } from "./middlewares/logger.middleware";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
 
@@ -26,6 +27,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tasks", taskRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 // After all routes
 app.use(errorHandler);
