@@ -24,6 +24,14 @@ export const TaskController = {
         archived: req.query.archived
           ? req.query.archived === "true"
           : undefined,
+        page: req.query.page
+          ? parseInt(req.query.page as string, 10)
+          : undefined,
+        limit: req.query.limit
+          ? parseInt(req.query.limit as string, 10)
+          : undefined,
+        sortBy: req.query.sortBy as any,
+        sortOrder: req.query.sortOrder as any,
       };
 
       const tasks = await TaskService.getTasksByUser(req.userId!, filter);
