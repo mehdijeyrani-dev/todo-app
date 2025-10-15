@@ -10,17 +10,13 @@ type ColorType =
   | "warning"
   | "info";
 type SizeType = "xs" | "sm" | "md" | "lg" | "xl";
-type IconPlacement = "left" | "right";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: VariantType;
   color?: ColorType;
   size?: SizeType;
   children?: React.ReactNode;
-  icon?: React.ReactNode;
-  iconOnly?: boolean;
-  iconPlacement?: IconPlacement;
-  iconClassName?: string;
+  hasIcon?: boolean;
 }
 
 // Define static class mappings for each color + variant
@@ -87,57 +83,32 @@ const sizeClasses: Record<SizeType, string> = {
   xl: "px-5 py-2.5",
 };
 
-const iconSizeClasses: Record<SizeType, string> = {
-  xs: "h-4 w-4 grid place-content-center",
-  sm: "h-5.5 w-5.5 grid place-content-center",
-  md: "h-6 w-6 grid place-content-center",
-  lg: "h-8 w-8 grid place-content-center",
-  xl: "h-10 w-10 grid place-content-center",
-};
-
 const Button = ({
   children,
   variant = "filled",
   color = "primary",
-  size = "md",
-  icon,
-  iconOnly = false,
-  iconPlacement = "left",
-  iconClassName,
+  size,
+  hasIcon,
   className,
   type = "button",
   ...props
 }: ButtonProps) => {
-  const baseClasses =
-    "inline-flex items-center justify-center transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
+  const baseClasses = `transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
+    hasIcon
+      ? "grid place-content-center"
+      : "inline-flex items-center justify-center"
+  }`;
 
   const colorVariantClasses = variantColorClasses[variant][color];
-  const sizeClass = sizeClasses[size];
-  const iconSizeClass = iconSizeClasses[size];
+  const sizeClass = sizeClasses[size!];
 
   return (
     <button
       type={type}
-      className={clsx(
-        baseClasses,
-        colorVariantClasses,
-        sizeClass,
-        iconOnly && "p-0",
-        className
-      )}
+      className={clsx(baseClasses, colorVariantClasses, sizeClass, className)}
       {...props}
     >
-      {icon && iconPlacement === "left" && (
-        <span className={clsx(iconSizeClass, iconClassName)} aria-hidden="true">
-          {icon}
-        </span>
-      )}
-      {!iconOnly && children && <span>{children}</span>}
-      {icon && iconPlacement === "right" && (
-        <span className={clsx(iconSizeClass, iconClassName)} aria-hidden="true">
-          {icon}
-        </span>
-      )}
+      {children}
     </button>
   );
 };

@@ -133,4 +133,13 @@
   .dark .main-scrollbar .simplebar-scrollbar::before {
     background: var(--color-border) !important;
   }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
